@@ -4,6 +4,9 @@ from math import prod
 from time import strftime
 from tkinter.tix import InputOnly
 from wsgiref.validate import validator
+
+#Otimizar e completar código
+
 #produtos
 class product:
     def __init__(self, nome, codigo, preco, tipo, disponivel):
@@ -169,7 +172,7 @@ def time():
 
 def iniciar():
 
-    #mensagem inicial e verificação de códigox' 
+    #mensagem inicial e verificação de código' 
 
     print("1 - Cadastrar\n2 - Consultar\n3 - Atualizar\n4 - Pesquisar\n5 - Registrar Compra\n6 - Relatório de compras")
     method = int(input("\nDigite sua ação: "))
