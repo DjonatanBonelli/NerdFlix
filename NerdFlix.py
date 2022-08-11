@@ -1,12 +1,10 @@
 from datetime import date, datetime
 from hmac import compare_digest
 from math import prod
+from re import S
+import pandas as pd
 from time import strftime
-from tkinter.tix import InputOnly
 from wsgiref.validate import validator
-
-#Otimizar e completar código
-
 #produtos
 class product:
     def __init__(self, nome, codigo, preco, tipo, disponivel):
@@ -16,122 +14,93 @@ class product:
         self.tipo = tipo
         self.disponivel = disponivel
 
-nome_produto = ['filme1', 'filme2']
-codigo_produto = [1, 2]
-preco_produto = [25.3, 43.1]
-tipo_produto = [2, 5]
-disponivel_produto = ['Disponível', 'Indisponível']
-lista4 = []
+detalhes = []
+lista_de_verif = []
 lista_de_confirm = []
-
+compras = []
+product.codigo = 0
 #mostra o produto com todos os dados
 def verificacao():
     verificacao = int(input("Produto à ser verificado: "))
-    lista4.append(codigo_produto[verificacao-1])
-    lista4.append(nome_produto[verificacao-1])
-    lista4.append(preco_produto[verificacao-1])
-    lista4.append(tipo_produto[verificacao-1])
-    lista4.append(disponivel_produto[verificacao-1])
-    print(lista4)
+    for i in range(len(detalhes)):
+        if detalhes[i].tipo == verificacao:
+            print(f"{detalhes[i].codigo}, {detalhes[i].nome}, R${detalhes[i].preco}, {detalhes[i].tipo}, {detalhes[i].disponivel}")
     iniciar()
 
 #cadastrar produtos
 def cadastro():
-    numero_de_cadastros = int(input("Número de produtos a serem cadastrados: "))
-
-#Trocar while por nova chamada de função / // /
-    while numero_de_cadastros > 0:
+    while True:
         product.nome = str(input("\nNome: "))
-        product.preco = float(input("Preço: "))
-        product.tipo = int(input("Tipo: "))
+        if product.nome == '':
+            break
+
+        product.preco = input("Preço: ")
+        while True:    
+            try:
+                product.preco = float(product.preco)
+                break
+            except:
+                product.preco = input("Formato inválido, digite o preço novamente: ")
+
+        product.tipo = input("Tipo: ")
+        while product.tipo != "1" and product.tipo != "2" and product.tipo != "3":
+            product.tipo = input("Formato inválido, digite o tipo novamente: ")
+        product.tipo = int(product.tipo)
+
+        product.disponivel = str(input("Disponível(s/n): "))
+        while product.disponivel != "s" and product.disponivel != "n":
+            product.tipo = input("Formato inválido, digite novamente(s/n): ")
+
+        product.codigo += 1
+
         if product.tipo == 1:
             product.tipo = "Série"
         elif product.tipo == 2:
             product.tipo = "Filme"
         elif product.tipo == 3:
             product.tipo == "Documentário" 
-        product.disponivel = str(input("Disponivel(s/n): "))
         if product.disponivel == "s":
             product.disponivel = "Disponível"
         elif product.disponivel == "n":
             product.disponivel = "Indisponível"
-        nome_produto.append(product.nome)
-        preco_produto.append(product.preco)
-        tipo_produto.append(product.tipo)
-        disponivel_produto.append(product.disponivel)
-        codigo_produto.append(len(nome_produto))
+        detail = product(product.nome, product.codigo, product.preco, product.tipo, product.disponivel)
+        detalhes.append(detail)
         
-        numero_de_cadastros = numero_de_cadastros - 1 
-        
-        print(codigo_produto, nome_produto, preco_produto, tipo_produto, disponivel_produto)
-    iniciar()
-
-#consulta por classe
-def consulta():
-    indice = -0
-    print("0 - Todos os produtos\n1 - Somente filmes\n2 - Séries\n3 - Documentários\n4 - Todos os produtos disponíveis\n5 - Todos os produtos indisponíveis")
-    opcao = int(input("\nFiltro: "))    
-    if opcao == 0:
-        for x in tipo_produto:
-            print(f"{codigo_produto[indice]}, {nome_produto[indice]}, R${preco_produto[indice]}, {tipo_produto[indice]}, {disponivel_produto[indice]}")
-            indice += 1
-    elif opcao == 1:
-        for y in tipo_produto:
-            if y == 2:
-                print(f"{codigo_produto[indice]}, {nome_produto[indice]}, R${preco_produto[indice]}, {tipo_produto[indice]}, {disponivel_produto[indice]}")
-            indice += 1
-    elif opcao == 2:
-        for x in tipo_produto:
-            if x == 1:
-                print(f"{codigo_produto[indice]}, {nome_produto[indice]}, R${preco_produto[indice]}, {tipo_produto[indice]}, {disponivel_produto[indice]}")
-            indice += 1
-    elif opcao == 3:
-        for x in tipo_produto:
-            if x == 3:
-                print(f"{codigo_produto[indice]}, {nome_produto[indice]}, R${preco_produto[indice]}, {tipo_produto[indice]}, {disponivel_produto[indice]}")
-            indice += 1
-    elif opcao == 4:
-        for x in disponivel_produto:
-            if x == "Disponível":
-                print(f"{codigo_produto[indice]}, {nome_produto[indice]}, R${preco_produto[indice]}, {tipo_produto[indice]}, {disponivel_produto[indice]}")
-            indice += 1
-
-    elif opcao == 5:
-        for x in disponivel_produto:
-            if x == "Indisponível":
-                print(f"{codigo_produto[indice]}, {nome_produto[indice]}, R${preco_produto[indice]}, {tipo_produto[indice]}, {disponivel_produto[indice]}")
-            indice += 1
-    print("\nA consulta foi concluída")
+        print(detail.codigo, detail.nome, detail.preco, detail.tipo, detail.disponivel)
     iniciar()
 
 #atualiza produtos    
 def atualizar():
-    remover = int(input("índice: "))
-    lista_de_confirm.append(codigo_produto[remover-1])
-    lista_de_confirm.append(nome_produto[remover-1])
-    lista_de_confirm.append(tipo_produto[remover-1])
-    lista_de_confirm.append(disponivel_produto[remover-1])
-    print(lista_de_confirm)
-    confirm = int(input("1 - confirmar \n2 - cancelar"))
-    if confirm == 1:
-        nome_produto.remove(nome_produto[remover-1])
-        disponivel_produto.remove(disponivel_produto[remover-1])
-        tipo_produto.remove(tipo_produto[remover-1])
-        nome_produto.remove(nome_produto[remover-1])
-        if len(codigo_produto) > len(nome_produto):
-            for i in range(0, len(codigo_produto), -1):
-                codigo_produto.remove(codigo_produto[i])
-                print(codigo_produto)
-        #pede os novos parâmetros
+    #pede os novos parâmetros
+    verificacao()
+    print("1 - Atualizar nome\n2 - Atualizar preço\n3 - Atualizar Tipo\n4 - Atualizar disponibilidade")
+    metodat = input("Método de atualização: ")
+    while metodat != "1" and metodat != "2" and metodat != "3" and metodat != "4": 
+        metodat = input("Método inválido, digite novamente: ")
+
+    confirmacao = int(input("\nConfirmação(s/n): "))
+    
+    while confirmacao != 's' and confirmacao != 'n':
+        confirmacao = input("Método inválido, digite novamente: ")
+
+    if metodat == 1 and confirmacao == "s":
         product.nome = str(input("\nNome: "))
         product.preco = float(input("Preço: "))
         product.tipo = int(input("Tipo: "))
         product.disponivel = str(input("Disponivel(s/n): "))
-        #os organiza no indice na lista
-        nome_produto.insert(len([remover-1]), product.nome)
-        preco_produto.insert(len([remover-1]), product.preco)
-        tipo_produto.insert(len([remover-1]), product.tipo) 
-        disponivel_produto.insert(len([remover-1]), product.disponivel)
+        #os organiza no i na lista
+        detalhes.insert(len([verificacao-1]), product.nome)
+        detalhes.insert(len([verificacao-1]), product.preco)
+        detalhes.insert(len([verificacao-1]), product.tipo) 
+        detalhes.insert(len([verificacao-1]), product.disponivel)
+
+    if metodat == 2 and confirmacao == "s":
+        for i in range(len(detalhes)):
+            if detalhes[i].disponivel == "Disponível":
+                detalhes[i].disponivel == "Indisponível"
+            elif detalhes[i].disponivel == "Indisponível":
+                detalhes[i].disponivel == "Disponível"
+
     iniciar()
 
 #registra compra
@@ -139,26 +108,74 @@ def registrar_compra():
     global login
   ##  compra = []
     login = input("Insira seu login: ")
+    while login == '':
+        login = input("Insira seu login: ")
 
     while True:          
-        cod_conf = int(input("Digite o código do produto: "))
-        if cod_conf == -1:
+        cod_conf = input("Digite o código do produto: ")
+        for i in range(len(detalhes)):
+            while i+1 != detalhes[i].codigo:
+                cod_conf = input("Código inválido, tente novamente: ")
+        if cod_conf == '':
             break
-        while cod_conf != 1 and cod_conf != 2 and cod_conf != 3:
-            cod_conf = int(input("Código inválido, tente novamente: "))
         print(cod_conf)
-        confirmar_compra = int(input("1 - Confirmar\n2 - Cancelar")) 
-        if confirmar_compra == 1:
-            print()
-           #### compra.append()
+        print("1 - Confirmar\n2 - Cancelar")
+        confirmar_compra = input("Método: ")
+        while confirmar_compra != '1' and confirmar_compra != '2':
+            confirmar_compra = input("Método inválido, digite novamente: ") 
+        if confirmar_compra == '1':
+            compras.append(cod_conf)
         else:
-            cod_conf = int(input("Digite o código do produto: "))
+            cod_conf = input("Digite o código do produto: ")
         time()
+    iniciar()
 
-def relatorio():
+def relatorio_produtos():
+    print("0 - Todos os produtos\n1 - Somente filmes\n2 - Séries\n3 - Documentários\n4 - Todos os produtos disponíveis\n5 - Todos os produtos indisponíveis")
+    opcao = int(input("\nFiltro: "))    
+    if opcao == 0:
+        for i in range(len(detalhes)):
+            print(f"{detalhes[i].codigo}, {detalhes[i].nome}, R${detalhes[i].preco}, {detalhes[i].tipo}, {detalhes[i].disponivel}")
+            
+    elif opcao == 1:
+        for i in range(len(detalhes)):
+            if detalhes[i].tipo == 2:
+                print(f"{detalhes[i].codigo}, {detalhes[i].nome}, R${detalhes[i].preco}, {detalhes[i].tipo}, {detalhes[i].disponivel}")
+
+    elif opcao == 2:
+        for i in range(len(detalhes)):
+            if detalhes[i].tipo == 1:
+                print(f"{detalhes[i].codigo}, {detalhes[i].nome}, R${detalhes[i].preco}, {detalhes[i].tipo}, {detalhes[i].disponivel}")
+            
+    elif opcao == 3:
+        for i in range(len(detalhes)):
+            if detalhes[i].tipo == 3:
+                print(f"{detalhes[i].codigo}, {detalhes[i].nome}, R${detalhes[i].preco}, {detalhes[i].tipo}, {detalhes[i].disponivel}")
+            
+    elif opcao == 4:
+        for i in range(len(detalhes)):
+            if detalhes[i].disponivel == "Disponível":
+                print(f"{detalhes[i].codigo}, {detalhes[i].nome}, R${detalhes[i].preco}, {detalhes[i].tipo}, {detalhes[i].disponivel}")
+            
+
+    elif opcao == 5:
+        for i in range(len(detalhes)):
+            if detalhes[i].disponivel == "Indisponível":
+                print(f"{detalhes[i].codigo}, {detalhes[i].nome}, R${detalhes[i].preco}, {detalhes[i].tipo}, {detalhes[i].disponivel}")
+    
+    print("\nA consulta foi concluída")
+    iniciar()
+    
+def relatorio_compras():
+
     print(login, data)
-    print("Código   Nome   Tipo   Preço")
-    print()
+    for i in range(len(compras)):
+        tabelas = {'Código': [detalhes[i].codigo],
+        'Nome': [detalhes[i].nome],
+        'Preço': [detalhes[i].preco],
+        'Tipo': [detalhes[i].tipo]}
+    tabela = pd.DataFrame(tabelas)
+    print(tabela)
 
 
 #data e hora:
@@ -172,23 +189,24 @@ def time():
 
 def iniciar():
 
-    #mensagem inicial e verificação de código' 
+    #mensagem inicial e verificação de códigox' 
 
-    print("1 - Cadastrar\n2 - Consultar\n3 - Atualizar\n4 - Pesquisar\n5 - Registrar Compra\n6 - Relatório de compras")
+    print("1 - Cadastrar\n2 - Consultar\n3 - Atualizar\n4 - Registrar Compra\n5 - Relatório de produtos\n6 - Relatório de compras")
     method = int(input("\nDigite sua ação: "))
 
     if method == 1:
         cadastro()
     elif method == 2:
-        consulta()                  
+        verificacao()
     elif method == 3:
         atualizar()
     elif method == 4:
-        verificacao()
-    elif method == 5:
         registrar_compra()
+    elif method == 5:
+        relatorio_produtos()
     elif method == 6:
-        relatorio()
+        relatorio_compras()
+
 iniciar()
 
 time()
