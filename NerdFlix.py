@@ -20,26 +20,6 @@ tipo_comprado = []
 lista_de_verif = []
 lista_de_confirm = []
 product.codigo = 0
-#mostra o produto com todos os dados
-def verificacao():
-    verificar = input("Produto à ser verificado: ")
-    while True: 
-        try:
-            verificar = int(verificar)
-            break
-        except:
-            verificar = input("Formato inválido, tente novamente: ")
-
-    for i in range(len(detalhes)):
-        verificar = str(verificar)
-        if detalhes[i].codigo == verificar:
-            print(f"{detalhes[i].codigo}, {detalhes[i].nome}, R${detalhes[i].preco}, {detalhes[i].tipo}, {detalhes[i].disponivel}")
-        
-        verificar = int(verificar)
-        if i == verificar:
-            while detalhes[i].codigo != verificar:
-                verificar = input("Produto inexistente, tente novamente: ")
-    iniciar()
 #cadastrar produtos
 def cadastro():
     print("Cadastro de produtos:")
@@ -57,7 +37,7 @@ def cadastro():
             except:
                 product.preco = input("Formato inválido, digite o preço novamente: ")
 
-        product.tipo = input("Tipo: ")
+        product.tipo = input("Tipo(1- série / 2- filme / 3 - documentário): ")
         while product.tipo != "1" and product.tipo != "2" and product.tipo != "3":
             product.tipo = input("Formato inválido, digite o tipo novamente: ")
         product.tipo = int(product.tipo)
@@ -84,6 +64,27 @@ def cadastro():
         detalhes.append(detail)
         
         print(f"{detail.codigo}, {detail.nome}, R${detail.preco}, {detail.tipo}, {detail.disponivel}")
+    iniciar()
+
+#mostra o produto com todos os dados
+def verificacao():
+    verificar = input("Produto à ser verificado: ")
+    while True: 
+        try:
+            verificar = int(verificar)
+            break
+        except:
+            verificar = input("Formato inválido, tente novamente: ")
+
+    for i in range(len(detalhes)):
+        verificar = str(verificar)
+        if detalhes[i].codigo == verificar:
+            print(f"{detalhes[i].codigo}, {detalhes[i].nome}, R${detalhes[i].preco}, {detalhes[i].tipo}, {detalhes[i].disponivel}")
+        
+        verificar = int(verificar)
+        if i == verificar:
+            while detalhes[i].codigo != verificar:
+                verificar = input("Produto inexistente, tente novamente: ")
     iniciar()
 
 #atualiza produtos    
@@ -144,7 +145,7 @@ def atualizar():
             detalhes[i].preco = product.preco
 
     elif methodat == "3" and confirmacao == "s":
-        product.tipo = input("Tipo: ")
+        product.tipo = input("Tipo 1- série / 2- filme / 3 - documentário: ")
 
         while product.tipo != "1" and product.tipo != "2" and product.tipo != "3":
             product.tipo = input("Formato inválido, digite o tipo novamente: ")
