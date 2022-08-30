@@ -66,7 +66,7 @@ def cadastro():
         while product.disponivel != "s" and product.disponivel != "n":
             product.disponivel = input("Formato inválido, digite novamente(s/n): ")
 
-#tratamento de strings
+        #tratamento de strings
         product.codigo += 1
         if product.tipo == 1:
             product.tipo = "Série"
@@ -79,7 +79,7 @@ def cadastro():
         elif product.disponivel == "n":
             product.disponivel = "Indisponível"
 
-#detail recebe a classe e detalhes adiciona os parâmetros na lista
+        #detail recebe a classe e detalhes adiciona os parâmetros na lista
         detail = product(product.nome, str(product.codigo), product.preco, product.tipo, product.disponivel)
         detalhes.append(detail)
         
@@ -247,6 +247,7 @@ def relatorio_compras():
     print("\nCódigo  Nome  Preço  Tipo")
     for i in range(len(codigo_comprado)):
         print(f"{codigo_comprado[i]}, {nome_comprado[i]}, R${preco_comprado[i]}, {tipo_comprado[i]}")
+    time()
     iniciar()
 
 #data e hora:
@@ -280,4 +281,3 @@ def iniciar():
         relatorio_compras()
 
 iniciar()
-time()
